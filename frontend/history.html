@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Session History — AI Interview Training Coach</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style/style.css" />
+  <style>
+    body { background: #f4f6f8; }
+    .session-card { border-radius: 12px; transition: transform 0.2s; }
+    .session-card:hover { transform: translateY(-3px); }
+    .session-header { font-weight: 600; }
+    .tab-content pre { background: #f8f9fa; padding: 10px; border-radius: 8px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; text-align: left; }
+    .no-sessions { text-align: center; padding: 50px; color: #888; font-size: 1.2rem; }
+    .chart-comment { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 10px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 text-dark" href="index.html">AI Interview Practice</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Practice</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="new_session.html">Start a session</a></li>
+              <li><a class="dropdown-item" href="history.html">Session history</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link text-dark" href="#">About</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Support</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <li><a class="dropdown-item" href="#">Contact</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="new_session.html" class="btn btn-danger rounded-pill px-4">Try Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <h2 class="mb-4 text-center">📜 Session History</h2>
+
+    <!-- Chart + Comment -->
+    <div class="row mb-4 align-items-center">
+      <div class="col-md-8">
+        <canvas id="scoreChart" height="100"></canvas>
+      </div>
+      <div class="col-md-4">
+        <div class="chart-comment">
+          <strong>Performance Comment:</strong>
+          <p id="chartComment">Loading comment...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sessions -->
+    <div id="sessions-container" class="row g-4">
+      <div class="no-sessions" id="no-sessions-msg">Loading sessions...</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-light text-center text-muted border-top">
+    <small>AI Interview Training Coach — Built with Higgs Audio V2.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    async function loadSessions() {
+      const container = document.getElementById("sessions-container");
+      const noSessionsMsg = document.getElementById("no-sessions-msg");
+      const chartCommentEl = document.getElementById("chartComment");
+
+      try {
+        // 1️⃣ Fetch session history
+        const resp = await fetch("/session_history");
+        const data = await resp.json();
+        const sessions = data.sessions || [];
+
+        if (sessions.length === 0) {
+          noSessionsMsg.textContent = "You have no previous sessions yet.";
+          return;
+        }
+
+        noSessionsMsg.style.display = "none";
+
+        // 2️⃣ Render line chart
+        const labels = sessions.map((s, idx) => `S${idx + 1}`);
+        const scores = sessions.map(s => s.total_score || 0);
+        const ctx = document.getElementById("scoreChart").getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [{
+              label: "Score",
+              data: scores,
+              borderColor: "#007bff",
+              backgroundColor: "rgba(0,123,255,0.2)",
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, max: 10, title: { display: true, text: "Score" } },
+              x: { title: { display: true, text: "Session" } }
+            }
+          }
+        });
+
+        // 3️⃣ Fetch comments from GPT
+        chartCommentEl.textContent = "Generating comment...";
+        let comments = [];
+        try {
+          const commentResp = await fetch("/give_comment");
+          const commentData = await commentResp.json();
+          comments = commentData.comments || [];
+          if (comments.length > 0) chartCommentEl.textContent = comments[comments.length - 1].comment;
+          else chartCommentEl.textContent = "No comment available.";
+        } catch (err) {
+          console.error(err);
+          chartCommentEl.textContent = "Error generating comment.";
+        }
+
+        // 4️⃣ Render session cards
+        sessions.forEach((session, idx) => {
+          const col = document.createElement("div");
+          col.className = "col-md-6";
+
+          let questionsHtml = '';
+          session.questions.forEach((q, i) => {
+            questionsHtml += '<div class="mb-2">';
+            questionsHtml += `<p><strong>Q${i + 1}:</strong> ${q.question}</p>`;
+            questionsHtml += `<p><strong>Transcript:</strong> ${q.response}</p>`;
+            questionsHtml += `<p><strong>Analysis (Content):</strong> ${q.analysis_content}</p>`;
+            questionsHtml += `<p><strong>Analysis (Delivery):</strong> ${q.analysis_delivery}</p>`;
+            questionsHtml += `<p><strong>Score:</strong> ${q.score}</p>`;
+            questionsHtml += '</div><hr>';
+          });
+
+          // Find comment for this session if available
+          const sessionCommentObj = comments.find(c => new Date(c.timestamp).getTime() === new Date(session.timestamp).getTime());
+          const sessionComment = sessionCommentObj ? sessionCommentObj.comment : "No comment available.";
+
+          col.innerHTML = `
+            <div class="card p-3 shadow-sm session-card">
+              <div class="session-header mb-2">Session — ${new Date(session.timestamp).toLocaleString()}</div>
+              <p>Total Score: ${session.total_score}</p>
+              <ul class="nav nav-tabs" id="tabMenu-${idx}" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="questions-tab-${idx}" data-bs-toggle="tab" data-bs-target="#questions-pane-${idx}" type="button" role="tab">Questions</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="summary-tab-${idx}" data-bs-toggle="tab" data-bs-target="#summary-pane-${idx}" type="button" role="tab">Overall Summary</button>
+                </li>
+              </ul>
+              <div class="tab-content mt-2">
+                <div class="tab-pane fade show active" id="questions-pane-${idx}" role="tabpanel"><pre>${questionsHtml}</pre></div>
+                <div class="tab-pane fade" id="summary-pane-${idx}" role="tabpanel"><pre>${session.overall_summary}</pre></div>
+              </div>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+
+      } catch(e) {
+        console.error("Failed to load sessions:", e);
+        noSessionsMsg.textContent = "Failed to load sessions.";
+      }
+    }
+
+    loadSessions();
+  </script>
+</body>
+</html>

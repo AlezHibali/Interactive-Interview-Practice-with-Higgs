@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start New Session — AI Interview Training Coach</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style/style.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 text-dark" href="index.html">AI Interview Practice</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Practice</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item active" href="new_session.html">Start a session</a></li>
+              <li><a class="dropdown-item" href="history.html">Session history</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link text-dark" href="#">About</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Support</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <li><a class="dropdown-item" href="#">Contact</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="new_session.html" class="btn btn-danger rounded-pill px-4">Try Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- New Session Section -->
+  <section class="container py-5 my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="card shadow-lg border-0 rounded-4">
+          <div class="card-body p-5">
+            <h2 class="fw-bold mb-3 text-center">🎯 Start a New Interview Session</h2>
+            <p class="text-muted text-center mb-4">
+              Customize your interview type, choose a voice, and add any specific notes before starting.
+            </p>
+
+            <form id="sessionForm">
+              <!-- Role -->
+              <div class="mb-3">
+                <label for="roleSelect" class="form-label fw-semibold">Interview Role</label>
+                <select id="roleSelect" class="form-select">
+                  <option value="software engineer">Software Engineer</option>
+                  <option value="data scientist">Data Scientist</option>
+                  <option value="product manager">Product Manager</option>
+                  <option value="other">Other (specify below)</option>
+                </select>
+              </div>
+
+              <!-- Custom role -->
+              <div class="mb-3" id="customRoleContainer" style="display: none;">
+                <label for="customRoleInput" class="form-label fw-semibold">Custom Role</label>
+                <input type="text" id="customRoleInput" class="form-control" placeholder="Enter your desired role" />
+              </div>
+
+              <!-- Voice -->
+              <div class="mb-3">
+                <label for="voiceSelect" class="form-label fw-semibold">Voice</label>
+                <select id="voiceSelect" class="form-select">
+                  <option value="belinda">Belinda</option>
+                  <option value="broom_salesman">Broom Salesman</option>
+                  <option value="chadwick">Chadwick</option>
+                  <option value="en_man">English Male</option>
+                  <option value="en_woman">English Female</option>
+                  <option value="mabel">Mabel</option>
+                  <option value="vex">Vex</option>
+                  <option value="zh_man_sichuan">Chinese Male (Sichuan)</option>
+                </select>
+              </div>
+
+              <!-- Notes -->
+              <div class="mb-4">
+                <label for="notesInput" class="form-label fw-semibold">Additional Notes</label>
+                <textarea id="notesInput" class="form-control" rows="3" placeholder="E.g., focus on technical depth or communication pace"></textarea>
+              </div>
+
+              <!-- resume upload -->
+              <div class="mb-4">
+                <label for="resumeInput" class="form-label fw-semibold">Upload Your Resume (pdf)</label>
+                <input type="file" id="resumeInput" class="form-control" accept=".pdf"/>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-danger rounded-pill px-4 py-2 fs-5">Start Session</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-light text-center text-muted border-top">
+    <small>AI Interview Training Coach — Built with Higgs Audio V2.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const roleSelect = document.getElementById("roleSelect");
+    const customRoleContainer = document.getElementById("customRoleContainer");
+    const customRoleInput = document.getElementById("customRoleInput");
+    const form = document.getElementById("sessionForm");
+
+    // Show/hide custom role
+    roleSelect.addEventListener("change", () => {
+      customRoleContainer.style.display = roleSelect.value === "other" ? "block" : "none";
+    });
+
+    // Save user preferences and redirect
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      let role = roleSelect.value;
+      if (role === "other") {
+        role = customRoleInput.value.trim();
+        if (!role) {
+          alert("Please enter your custom role.");
+          return;
+        }
+      }
+
+      const voice = document.getElementById("voiceSelect").value;
+      const notes = document.getElementById("notesInput").value.trim();
+      const resumeFile = document.getElementById("resumeInput").files[0];
+
+      // Save locally
+      localStorage.setItem("interviewRole", role);
+      localStorage.setItem("ttsVoice", voice);
+      localStorage.setItem("interviewNotes", notes);
+
+      // Submit to backend for question generation
+      const formData = new FormData();
+      formData.append("role", role);
+      formData.append("additional_note", notes);
+      if (resumeFile) formData.append("resume", resumeFile);
+
+      const resp = await fetch("/question", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await resp.json();
+      if (result.error) {
+        alert("Error generating questions: " + result.error);
+        return;
+      }
+
+      // Store generated questions and redirect
+      localStorage.setItem("generatedQuestions", JSON.stringify(result.questions));
+      window.location.href = "practice.html";
+    });
+
+  </script>
+</body>
+</html>

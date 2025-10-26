@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Interview Training Coach</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style/style.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 text-dark" href="index.html">AI Interview Practice</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Practice</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="new_session.html">Start a session</a></li>
+              <li><a class="dropdown-item" href="history.html">Session history</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link text-dark" href="#">About</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Support</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <li><a class="dropdown-item" href="#">Contact</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="new_session.html" class="btn btn-danger rounded-pill px-4">Try Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="container py-5 my-5">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <h1 class="display-4 fw-bold mb-4">Interview smarter. <br>Land your dream job.</h1>
+        <p class="text-muted mb-4 fs-5">
+          Step into a supportive, interactive space to practice real interview questions.
+          Get instant, personalized feedback and build confidence with every session—
+          no stress, just progress.
+        </p>
+        <div>
+          <a href="new_session.html" class="btn btn-danger btn-lg me-3 rounded-pill px-4">Practice now</a>
+          <a href="#how-it-works" class="btn btn-outline-secondary btn-lg rounded-pill px-4">How it works</a>
+        </div>
+      </div>
+      <div class="col-md-6 text-center mt-5 mt-md-0">
+        <!-- Carousel Section -->
+        <div id="heroCarousel" class="carousel slide w-100 mx-auto rounded-4 shadow" data-bs-ride="carousel" data-bs-interval="4000">
+          
+          <!-- Dots (Indicators) -->
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          </div>
+
+          <!-- Images (Slides) -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="static/images/interview1.jpeg" class="d-block w-100 rounded-4" alt="Interview session">
+            </div>
+            <div class="carousel-item">
+              <img src="static/images/interview2.jpeg" class="d-block w-100 rounded-4" alt="Workspace environment">
+            </div>
+            <div class="carousel-item">
+              <img src="static/images/interview3.jpg" class="d-block w-100 rounded-4" alt="Dashboard example">
+            </div>
+          </div>
+
+          <!-- (Optional) Navigation Arrows -->
+          <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-light text-center text-muted border-top">
+    <small>AI Interview Training Coach — Built with Higgs Audio V2.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

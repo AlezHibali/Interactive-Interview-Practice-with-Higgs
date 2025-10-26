@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Session — AI Interview Training Coach</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style/style.css" />
+  <style>
+    body { background: #f4f6f8; }
+    #question_text { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; }
+    pre { background: #f8f9fa; padding: 15px; border-radius: 10px; white-space: pre-wrap; }
+    .loading-spinner { display: none; justify-content: center; align-items: center; margin-top: 10px; }
+    video { border-radius: 12px; border: 1px solid #ddd; width: 100%; height: auto; }
+    .question-bar { max-height: 150px; overflow-y: auto; margin-top: 10px; border: 1px solid #ddd; border-radius: 8px; padding: 5px; background: #fff; }
+    .question-item { padding: 8px 12px; border-bottom: 1px solid #e2e2e2; cursor: pointer; }
+    .question-item.active { background-color: #e0f7fa; font-weight: 600; }
+    .tab-content pre { max-height: 200px; overflow-y: auto; }
+    #overall-summary { background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 15px; min-height: 50px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4 text-dark" href="index.html">AI Interview Practice</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+        <ul class="navbar-nav me-3">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Practice</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="new_session.html">Start a session</a></li>
+              <li><a class="dropdown-item" href="history.html">Session history</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link text-dark" href="#">About</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown">Support</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">FAQ</a></li>
+              <li><a class="dropdown-item" href="#">Contact</a></li>
+            </ul>
+          </li>
+        </ul>
+        <a href="new_session.html" class="btn btn-danger rounded-pill px-4">Try Now</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-5">
+    <h2 class="mb-4 text-center">🎙️ Interview Practice Session</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+      <a id="btnNewSession" class="btn btn-danger rounded-pill px-4" href="new_session.html">New Session</a>
+      <button id="btn-next-question" class="btn btn-secondary" disabled>Next Question</button>
+    </div>
+
+    <div class="progress mb-4" style="height: 20px;">
+      <div id="progress-bar" class="progress-bar bg-success" style="width: 0%;"></div>
+    </div>
+
+    <div class="row g-3">
+      <!-- Left: Camera feed -->
+      <div class="col-md-5">
+        <div class="card p-3 shadow-sm text-center">
+          <video id="camera" autoplay muted></video>
+          <div class="text-center mt-2">
+            <button id="btn-start" class="btn btn-success me-2" disabled>Start Recording</button>
+            <button id="btn-stop" class="btn btn-danger" disabled>Stop Recording</button>
+          </div>
+        </div>
+        <div class="question-bar mt-3" id="question_bar"></div>
+      </div>
+
+      <!-- Right: Question & transcript -->
+      <div class="col-md-7 d-flex flex-column">
+        <div class="card p-3 shadow-sm mb-3 flex-grow-1 d-flex flex-column">
+          <div id="question_text">Click “Start New Session” to begin.</div>
+          <div class="loading-spinner" id="speech-loading">
+            <div class="spinner-border text-primary" role="status"></div>
+            <span class="ms-2">Generating question audio...</span>
+          </div>
+        </div>
+
+        <div class="card p-3 shadow-sm flex-grow-1">
+          <ul class="nav nav-tabs" id="tabMenu" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="transcript-tab" data-bs-toggle="tab" data-bs-target="#transcript-tab-pane" type="button" role="tab">Transcript</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis-tab-pane" type="button" role="tab">Analysis</button>
+            </li>
+          </ul>
+          <div class="tab-content mt-3">
+            <div class="tab-pane fade show active" id="transcript-tab-pane" role="tabpanel">
+              <pre id="transcript">—</pre>
+            </div>
+            <div class="tab-pane fade" id="analysis-tab-pane" role="tabpanel">
+              <pre id="analysis">—</pre>
+            </div>
+          </div>
+          <div class="loading-spinner mt-2" id="analysis-loading">
+            <div class="spinner-border text-info" role="status"></div>
+            <span class="ms-2">Analyzing your response...</span>
+          </div>
+        </div>
+
+        <!-- Overall summary -->
+        <div class="card p-3 shadow-sm mt-3">
+          <h5>Overall Summary</h5>
+          <div id="overall-summary">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 bg-light text-center text-muted border-top">
+    <small>AI Interview Training Coach — Built with Higgs Audio V2.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="practice.js"></script>
+  <script>
+    // Camera setup
+    const camera = document.getElementById('camera');
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: false});
+        camera.srcObject = stream;
+      } catch(e) {
+        console.warn('Camera not available:', e);
+      }
+    }
+    startCamera();
+  </script>
+</body>
+</html>

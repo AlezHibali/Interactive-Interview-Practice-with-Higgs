@@ -49,8 +49,8 @@ Check out the demo video on YouTube: [Watch Demo](https://www.youtube.com/watch?
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/ai-interview-coach.git
-cd ai-interview-coach
+git clone https://github.com/AlezHibali/Interactive-Interview-Practice-with-Higgs.git
+cd Interactive-Interview-Practice-with-Higgs
 ```
 
 2. **Create a virtual environment**

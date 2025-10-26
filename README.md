@@ -46,6 +46,8 @@ Check out the demo video on YouTube: [Watch Demo](https://www.youtube.com/watch?
 
 ## Installation
 
+0. **Make sure you have FFMPEG and Python installed**
+
 1. **Clone the repository**
 
 ```bash

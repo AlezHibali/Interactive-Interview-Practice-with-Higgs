@@ -2,12 +2,14 @@
 
 AI Interview Training Coach is an interactive web application designed to help users practice technical interviews with real-time feedback. Using LLMs (Large Language Models), the platform analyzes user responses, generates follow-up questions, provides detailed content and delivery analysis, and offers overall summaries and personalized coaching comments.
 
+Thanks to the sponsor of hackathon Boson AI and their amazing API for Higgs Audio V2.
+
 ---
 
 ## Demo Video
 
 Check out the demo video on YouTube: [Watch Demo](https://www.youtube.com/watch?v=Xpx6502MAKA)
-
+Check out my Technical Report here: [Report](https://drive.google.com/file/d/10MvbPkQb7dBVrXqMjwipNpLi67-CG4F3/view?usp=sharing)
 
 
 ![AI Interview Training Coach Screenshot](src/img/homepage.png)

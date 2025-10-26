@@ -2,6 +2,14 @@
 
 AI Interview Training Coach is an interactive web application designed to help users practice technical interviews with real-time feedback. Using LLMs (Large Language Models), the platform analyzes user responses, generates follow-up questions, provides detailed content and delivery analysis, and offers overall summaries and personalized coaching comments.
 
+---
+
+## Demo Video
+
+Check out the demo video on YouTube: [Watch Demo](https://www.youtube.com/watch?v=Xpx6502MAKA)
+
+
+
 ![AI Interview Training Coach Screenshot](src/img/homepage.png)
 ---
 
@@ -33,11 +41,6 @@ AI Interview Training Coach is an interactive web application designed to help u
 ![AI Interview Training Coach Screenshot](src/img/summary.png)
 ![AI Interview Training Coach Screenshot](src/img/profile.png)
 
----
-
-## Demo Video
-
-Check out the demo video on YouTube: [Watch Demo](https://www.youtube.com/watch?v=Xpx6502MAKA)
 
 ---
 
